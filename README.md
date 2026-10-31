@@ -6,8 +6,8 @@ A spooky browser adventure game built with plain **HTML, CSS and JavaScript**. E
 
 > Built for the **#KarimiBuilds Halloween challenge**: a week-long build, started as a beginner JavaScript and CSS project.
 
-**▶ Play it:** `https://YOUR-USERNAME.github.io/haunted-house/`
-*(replace with your live link)*
+**▶ Play it:** `https://the-haunted-commit.netlify.app
+
 
 <!-- Add a screenshot or GIF here:
 ![Gameplay screenshot](assets/images/screenshot.png)
