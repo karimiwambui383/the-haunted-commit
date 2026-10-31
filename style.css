@@ -1,0 +1,565 @@
+/* ---------- 1. Colours live in one place ---------- */
+:root {
+  --night: #120f2b;
+  --sky-glow: #2b2060;
+  --neon: #b04cff;        /* the purple roof lines from your inspo */
+  --wall: #231d3f;
+  --roof: #171230;
+  --window: #ffb061;      /* warm window light */
+  --door: #4a2a2f;
+  --pumpkin: #f08a1c;
+  --pumpkin-glow: #ffd36b;
+  --ghost: #e9e6ff;
+  --moon: #f2e8c9;
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 70% 5%, var(--sky-glow), var(--night) 65%);
+  color: var(--moon);
+  font-family: "IM Fell English SC", Georgia, serif;
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding-bottom: 1.5rem;
+}
+
+.moon {
+  position: absolute;
+  top: 6%;
+  left: 10%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--moon);
+  box-shadow: 0 0 50px 16px rgba(242, 232, 201, 0.3);
+}
+
+/* ---------- 2. The stage: 1em = 16px on big screens, shrinks on phones ---------- */
+.stage {
+  position: relative;
+  width: 27.5em;
+  height: 24em;
+  font-size: min(16px, 3.4vw);
+}
+
+.house { position: absolute; inset: 0; }
+.house > * { position: absolute; }
+
+/* ---------- 3. Roofs: neon outline = purple shape with a darker copy inside ---------- */
+.roof {
+  background: var(--neon);
+  filter: drop-shadow(0 0 0.5em var(--neon));
+}
+.roof::after {
+  content: "";
+  position: absolute;
+  inset: 0.2em;
+  background: var(--roof);
+  clip-path: inherit;
+}
+.roof-top   { left: 3em; top: 1em; width: 21.5em; height: 5.2em;
+              clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.roof-porch { left: 0; top: 10.8em; width: 27.5em; height: 1.4em;
+              clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%); }
+
+/* ---------- 4. Walls ---------- */
+.upper { left: 4em; top: 6.2em; width: 19.5em; height: 5em; background: var(--wall); }
+.lower { left: 1em; top: 12em;  width: 25.5em; height: 6.5em; background: var(--wall); }
+
+/* ---------- 5. Windows + one orchestrated moment: they flicker ---------- */
+.window {
+  width: 3em;
+  height: 3.6em;
+  background: var(--window);
+  border: 0.25em solid #cfc8f0;
+  box-shadow: 0 0 1.4em 0.3em rgba(255, 176, 97, 0.55);
+  animation: flicker 5s infinite;
+}
+.w-up-left   { left: 6.5em;  top: 7em; }
+.w-up-right  { left: 18em;   top: 7em;   animation-delay: 1.4s; }
+.w-low-left  { left: 4em;    top: 13.4em; animation-delay: 2.6s; }
+.w-low-right { left: 20.5em; top: 13.4em; animation-delay: 0.7s; }
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.95; }
+  50% { opacity: 0.45; }
+  55% { opacity: 1; }
+  80% { opacity: 0.8; }
+}
+
+/* ---------- 6. Door (JavaScript adds the class "open") ---------- */
+.door {
+  left: 12.25em;
+  top: 14em;
+  width: 3em;
+  height: 4.5em;
+  background: var(--door);
+  border: 0.2em solid #cfc8f0;
+  border-bottom: 0;
+  transform-origin: left center;
+  transition: transform 1.2s ease, background 1.2s ease, box-shadow 1.2s ease;
+}
+.door.open {
+  background: var(--window);
+  box-shadow: 0 0 2em 0.6em rgba(255, 176, 97, 0.7);
+  transform: perspective(20em) rotateY(-65deg);
+}
+
+.lamp { top: 14.3em; width: 0.5em; height: 0.8em; border-radius: 50%;
+        background: var(--pumpkin-glow); box-shadow: 0 0 1em 0.4em rgba(255, 211, 107, 0.6); }
+.lamp-left  { left: 11.2em; }
+.lamp-right { left: 16em; }
+
+/* Railing: repeating-linear-gradient draws a row of white posts */
+.railing {
+  left: 1em; top: 16.4em; width: 25.5em; height: 2em;
+  border-top: 0.2em solid #cfc8f0;
+  background: repeating-linear-gradient(90deg, #cfc8f0 0 0.2em, transparent 0.2em 0.9em);
+  -webkit-mask: linear-gradient(90deg, #000 0 40%, transparent 40% 60%, #000 60%);
+          mask: linear-gradient(90deg, #000 0 40%, transparent 40% 60%, #000 60%);
+}
+.steps { left: 11.5em; top: 18.5em; width: 4.5em; height: 0.8em; background: #3b345c; }
+
+/* ---------- 7. Ground and path ---------- */
+.ground {
+  position: absolute;
+  left: -20em; width: 67.5em; top: 18.5em; height: 6em;
+  background: linear-gradient(#2a2220, #14100f);
+}
+.path {
+  position: absolute;
+  left: 10em; top: 19.3em; width: 7.5em; height: 4.7em;
+  background: linear-gradient(#5a5470, #353050);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+}
+
+/* ---------- 8. Pumpkins: face = two shapes cut with clip-path ---------- */
+.pumpkin {
+  position: absolute;
+  width: 2.6em; height: 2.2em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #ffa63d, var(--pumpkin));
+  box-shadow: 0 0 1.4em 0.2em rgba(240, 138, 28, 0.5);
+}
+.pumpkin::before, .pumpkin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background: var(--pumpkin-glow);
+  transform: translateX(-50%);
+  box-shadow: 0 0 0.4em var(--pumpkin-glow);
+}
+.pumpkin::before { top: 28%; width: 1.5em; height: 0.45em;
+  clip-path: polygon(0 100%, 20% 0, 40% 100%, 60% 100%, 80% 0, 100% 100%); }
+.pumpkin::after  { top: 58%; width: 1.5em; height: 0.5em;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 70% 35%, 50% 100%, 30% 35%, 15% 100%); }
+
+.p1 { left: 2.5em;  top: 19.2em; }
+.p2 { left: 8em;    top: 20.8em; transform: scale(0.85); }
+.p3 { left: 17.5em; top: 19.8em; }
+.p4 { left: 22.5em; top: 20.3em; transform: scale(0.8); }
+.p5 { left: 22.8em; top: 21.2em; transform: scale(1.5); }
+
+/* ---------- 9. Ghosts float up and down ---------- */
+.ghost {
+  position: absolute;
+  width: 3em; height: 4em;
+  background: var(--ghost);
+  border-radius: 1.5em 1.5em 0 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 83% 85%, 66% 100%, 50% 85%, 33% 100%, 16% 85%, 0 100%);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 0.8em rgba(233, 230, 255, 0.8));
+  animation: float 4s ease-in-out infinite;
+}
+.ghost::before {   /* eyes */
+  content: "";
+  position: absolute;
+  top: 1.1em; left: 0.7em;
+  width: 0.45em; height: 0.6em;
+  border-radius: 50%;
+  background: #2a2150;
+  box-shadow: 1.1em 0 #2a2150;
+}
+.ghost-left  { left: -2.5em; top: 11em; }
+.ghost-right { left: 26em;  top: 10em; animation-delay: 1.6s; }
+
+@keyframes float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -0.9em; }
+}
+
+/* ---------- 10. Fog, title, button ---------- */
+.fog {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 180px;
+  background: linear-gradient(to top, rgba(130, 110, 200, 0.28), transparent);
+  pointer-events: none;
+}
+
+.panel { position: relative; text-align: center; margin-top: 1rem; padding: 0 1rem; }
+h1 { font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 400; letter-spacing: 0.04em; }
+#message { margin: 0.5rem 0 1.1rem; min-height: 1.5em; opacity: 0.85; }
+
+button {
+  font: inherit; font-size: 1.2rem;
+  color: var(--night); background: var(--pumpkin);
+  border: 0; padding: 0.7rem 2rem; border-radius: 999px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+button:hover { transform: scale(1.06); box-shadow: 0 0 20px var(--pumpkin); }
+button:focus-visible { outline: 3px solid var(--moon); outline-offset: 4px; }
+button:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .window, .ghost { animation: none; }
+  .door { transition: none; }
+}
+
+
+/* =====================================================
+   THE GAME: Dark Neon palette from your guide
+   ===================================================== */
+:root {
+  --bg: #0D0D14;
+  --deep: #1A1030;
+  --violet: #6C00FF;
+  --magenta: #FF00E6;
+  --cyan: #00FFFF;
+  --orange: #FF6B00;
+}
+
+.hidden { display: none !important; }
+
+.game { max-width: 780px; margin: 0 auto; padding: 1rem; }
+.game.hurt { animation: shake 0.4s; }
+@keyframes shake {
+  20% { transform: translateX(-8px); } 40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); } 80% { transform: translateX(6px); }
+}
+
+/* HUD: health, keys, time */
+.hud { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; }
+.stat {
+  flex: 1; text-align: center; padding: 0.5rem;
+  background: var(--deep); border: 1px solid var(--violet); border-radius: 12px;
+  box-shadow: 0 0 12px rgba(108, 0, 255, 0.5);
+}
+.lbl { display: block; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--cyan); }
+.stat span:last-child { font-size: 1.4rem; }
+#clock { text-shadow: 0 0 10px var(--magenta); }
+
+/* ROOMS: each room sets its own --accent colour */
+.room {
+  --accent: var(--violet);
+  position: relative; height: 52vh; min-height: 320px; overflow: hidden;
+  border: 2px solid var(--accent); border-radius: 16px;
+  background: linear-gradient(#1A1030, #0D0D14);
+  box-shadow: 0 0 20px var(--accent), inset 0 0 40px rgba(0, 0, 0, 0.7);
+}
+.room.hall     { --accent: #6C00FF; }
+.room.library  { --accent: #FF00E6; }
+.room.bedroom  { --accent: #8a5cff; }
+.room.basement { --accent: #00FFFF; background: linear-gradient(#0a1a22, #05080c); }
+
+.room::before {   /* glowing arched window */
+  content: ""; position: absolute; left: 50%; top: 10%;
+  width: 90px; height: 120px; transform: translateX(-50%);
+  border-radius: 45px 45px 0 0;
+  background: linear-gradient(#ffffff55, var(--accent));
+  opacity: 0.45; filter: blur(1px);
+  box-shadow: 0 0 50px 10px var(--accent);
+}
+.room::after {    /* floor */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)), repeating-linear-gradient(90deg, #00000033 0 60px, #ffffff0a 60px 62px);
+}
+#room-name {
+  position: absolute; top: 0.8rem; left: 1rem; z-index: 2;
+  font-weight: 400; letter-spacing: 0.08em; color: #fff;
+  text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+}
+
+/* HOTSPOTS: things you can click in a room */
+.spot {
+  position: absolute; z-index: 3; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.1rem;
+  padding: 0.4rem 0.7rem; color: #fff; font: inherit;
+  background: rgba(13, 13, 20, 0.75); border: 1px solid var(--accent); border-radius: 12px;
+  box-shadow: 0 0 12px var(--accent); animation: pulse 2.4s ease-in-out infinite;
+}
+.spot:hover { transform: translate(-50%, -50%) scale(1.1); background: rgba(26, 16, 48, 0.9); }
+.spot .ico { font-size: 1.9rem; }
+.spot .cap { font-size: 0.75rem; letter-spacing: 0.05em; }
+@keyframes pulse { 50% { box-shadow: 0 0 22px 3px var(--accent); } }
+
+#log { min-height: 3.2em; margin: 0.9rem 0; padding: 0 0.3rem; line-height: 1.4; }
+
+/* BUTTONS */
+.controls { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.controls button, .modal-box button {
+  font: inherit; font-size: 0.95rem; letter-spacing: 0.08em;
+  padding: 0.6rem 1.1rem; border-radius: 8px; background: transparent; cursor: pointer;
+  color: #fff; border: 1px solid #fff; box-shadow: none;
+}
+.btn-violet { border-color: var(--violet) !important; box-shadow: 0 0 10px var(--violet) !important; }
+.btn-cyan   { border-color: var(--cyan) !important; color: var(--cyan) !important; box-shadow: 0 0 10px var(--cyan) !important; }
+.btn-pink   { border-color: var(--magenta) !important; color: var(--magenta) !important; box-shadow: 0 0 10px var(--magenta) !important; }
+.btn-ghost  { opacity: 0.7; }
+
+/* MODAL (riddles, inventory, pause, game over) */
+.modal {
+  position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
+  background: rgba(5, 0, 12, 0.8); padding: 1rem;
+}
+.modal-box {
+  width: min(460px, 100%); padding: 1.5rem; text-align: center;
+  background: var(--deep); border: 2px solid var(--magenta); border-radius: 16px;
+  box-shadow: 0 0 30px var(--magenta);
+}
+.modal-box h3 { font-weight: 400; font-size: 1.6rem; margin-bottom: 0.8rem; text-shadow: 0 0 10px var(--magenta); }
+.modal-box p { margin-bottom: 0.9rem; line-height: 1.45; }
+.modal-box input {
+  width: 100%; padding: 0.6rem; font: inherit; color: #fff; text-align: center;
+  background: var(--bg); border: 1px solid var(--cyan); border-radius: 8px; margin-bottom: 0.8rem;
+}
+.modal-box .row { display: flex; gap: 0.6rem; justify-content: center; }
+.fb { color: var(--orange); min-height: 1.3em; }
+.keylist { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-bottom: 1rem; }
+.keyitem { padding: 0.5rem 0.8rem; border: 1px solid var(--cyan); border-radius: 10px; box-shadow: 0 0 10px var(--cyan); }
+.keyitem.missing { opacity: 0.3; box-shadow: none; border-color: #fff; }
+
+/* SCARE overlay */
+.scare {
+  position: fixed; inset: 0; z-index: 30; background: rgba(8, 0, 16, 0.94);
+  display: flex; align-items: center; justify-content: center;
+}
+#scare-face { font-size: 38vmin; filter: drop-shadow(0 0 40px var(--magenta)); animation: shake 0.3s infinite, flash 0.6s infinite; }
+@keyframes flash { 50% { opacity: 0.55; } }
+#banish {
+  position: absolute; font: inherit; font-size: 1.1rem; padding: 0.8rem 1.4rem; border-radius: 999px;
+  color: #fff; background: var(--orange); border: 0; box-shadow: 0 0 25px var(--orange); cursor: pointer;
+}
+
+
+/* =====================================================
+   DAY 3 ADDITIONS: key slots, goal line, how to play, share card
+   ===================================================== */
+
+/* Key slots in the HUD: dim until collected, then glow in their own colour */
+.stat .lbl #keycount { font-size: inherit; margin-left: 0.3em; color: #fff; }
+.slots { display: flex; justify-content: center; gap: 0.35rem; }
+.slot {
+  font-style: normal; font-size: 1.3rem; line-height: 1;
+  filter: grayscale(1) brightness(0.6); opacity: 0.35;
+  transition: filter 0.4s, opacity 0.4s, transform 0.4s;
+}
+.slot.on { opacity: 1; transform: scale(1.2); }
+.slot[data-key="silver"].on { filter: drop-shadow(0 0 6px #cfd8ff); }
+.slot[data-key="gold"].on   { filter: drop-shadow(0 0 6px #ffd24d); }
+.slot[data-key="rusty"].on  { filter: drop-shadow(0 0 6px #FF6B00) sepia(1) saturate(4) hue-rotate(-15deg); }
+.slot[data-key="master"].on { filter: drop-shadow(0 0 8px #FF00E6); }
+
+/* Goal line */
+.goal {
+  margin-bottom: 0.7rem; padding: 0.55rem 0.9rem; text-align: center;
+  font-size: 0.95rem; letter-spacing: 0.06em; color: var(--cyan);
+  background: rgba(0, 255, 255, 0.06); border: 1px solid var(--cyan); border-radius: 10px;
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+/* How to play: four icon cards */
+.howto { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
+.how-card {
+  display: flex; flex-direction: column; gap: 0.25rem; align-items: center;
+  padding: 0.8rem 0.5rem; border: 1px solid var(--violet); border-radius: 12px;
+  background: var(--bg); box-shadow: 0 0 12px rgba(108, 0, 255, 0.6);
+}
+.how-card b { letter-spacing: 0.1em; color: var(--magenta); text-shadow: 0 0 8px var(--magenta); }
+.how-card span { font-size: 0.8rem; line-height: 1.3; opacity: 0.9; }
+.how-ico { font-size: 2rem; filter: drop-shadow(0 0 8px var(--violet)); }
+
+/* Shareable ending card: screenshot-friendly */
+.share-card {
+  margin: 0 auto 1rem; padding: 1.2rem; max-width: 300px;
+  background: linear-gradient(160deg, var(--deep), var(--bg));
+  border: 2px solid var(--cyan); border-radius: 16px;
+  box-shadow: 0 0 25px var(--cyan), inset 0 0 25px rgba(108, 0, 255, 0.4);
+}
+.share-card .share-title { font-size: 2rem; letter-spacing: 0.1em; color: var(--magenta); text-shadow: 0 0 14px var(--magenta); }
+.share-card p { margin: 0.4rem 0; }
+.share-card small { color: var(--cyan); letter-spacing: 0.1em; }
+
+@media (max-width: 480px) { .howto { grid-template-columns: 1fr; } }
+
+
+/* =====================================================
+   ROOM ARTWORK (pure CSS): every shape is a styled <div>
+   ===================================================== */
+.decor { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.decor > * { position: absolute; }
+
+/* drifting fog, used in every room */
+.mist {
+  left: -10%; right: -10%; bottom: 8%; height: 38%;
+  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%);
+  animation: drift 9s ease-in-out infinite alternate;
+}
+@keyframes drift { to { transform: translateX(6%); } }
+
+/* ----- ENTRANCE HALL ----- */
+.stairs {
+  left: 3%; bottom: 24%; width: 22%; height: 42%;
+  background: linear-gradient(#3a2278, #150c2e);
+  clip-path: polygon(0 100%, 0 85%, 20% 85%, 20% 68%, 40% 68%, 40% 50%, 60% 50%, 60% 32%, 80% 32%, 80% 14%, 100% 14%, 100% 100%);
+}
+.doorframe {
+  right: 6%; bottom: 26%; width: 12%; height: 40%;
+  border: 3px solid var(--accent); border-bottom: 0; border-radius: 60px 60px 0 0;
+  background: linear-gradient(#0a0615, #1a0f33);
+  box-shadow: 0 0 18px var(--accent), inset 0 0 14px #000;
+}
+.frame {
+  top: 22%; width: 9%; height: 18%;
+  border: 3px solid #8a6cff; background: #0b0716; box-shadow: 0 0 10px var(--accent);
+}
+.f1 { left: 30%; } .f2 { left: 62%; }
+.chandelier { left: 66%; top: 0; width: 2px; height: 14%; background: var(--accent); }
+.chandelier::after {
+  content: ""; position: absolute; left: 50%; bottom: -14px; width: 46px; height: 14px;
+  transform: translateX(-50%); border-radius: 0 0 30px 30px; background: #ffb061;
+  box-shadow: 0 0 25px 8px rgba(255, 176, 97, 0.55); animation: flicker 5s infinite;
+}
+
+/* ----- LIBRARY ----- */
+.shelf {
+  bottom: 24%; width: 20%; height: 58%; border: 2px solid var(--accent); box-shadow: 0 0 14px var(--accent);
+  background:
+    repeating-linear-gradient(0deg, #0b0716 0 5px, transparent 5px 20%),
+    repeating-linear-gradient(90deg, #6C00FF 0 6px, #FF00E6 6px 10px, #1A1030 10px 13px, #00FFFF 13px 16px, #FF6B00 16px 19px, #3a2380 19px 25px);
+}
+.s1 { left: 2%; } .s2 { right: 2%; }
+.rug {
+  left: 50%; bottom: 6%; width: 46%; height: 15%; transform: translateX(-50%);
+  border: 2px solid var(--accent); border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%);
+  box-shadow: 0 0 20px var(--accent), inset 0 0 20px var(--accent);
+}
+.rug::after {
+  content: "✦"; position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 2rem; color: var(--accent); text-shadow: 0 0 12px var(--accent);
+}
+
+/* ----- BEDROOM: a real room = wall, floor and furniture ----- */
+.room.bedroom::before { display: none; }   /* we draw our own window below */
+.room.bedroom::after {                      /* wooden floor planks */
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.65)),
+              repeating-linear-gradient(90deg, #3d2616 0 38px, #2a190d 38px 40px);
+}
+.wallpaper {
+  left: 0; right: 0; top: 0; bottom: 28%;
+  background: repeating-linear-gradient(90deg, rgba(138, 92, 255, 0.16) 0 2px, transparent 2px 36px),
+              linear-gradient(#1e1245, #2a1855);
+}
+.wainscot {   /* lower wall panelling */
+  left: 0; right: 0; bottom: 28%; height: 20%; border-top: 4px solid rgba(207, 200, 240, 0.65);
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0 3px, rgba(255, 255, 255, 0.04) 3px 70px), #20123f;
+}
+.bwindow {
+  left: 50%; top: 9%; width: 90px; height: 125px; transform: translateX(-50%);
+  border: 5px solid #cfc8f0; border-radius: 45px 45px 0 0;
+  background: radial-gradient(circle at 65% 30%, #fff8dc 0 9px, transparent 10px), linear-gradient(#141047, #4b2a9a);
+  box-shadow: 0 0 40px 8px rgba(138, 92, 255, 0.5);
+}
+.bwindow::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: #cfc8f0; }
+.bwindow::after  { content: ""; position: absolute; left: 0; right: 0; top: 55%; height: 4px; background: #cfc8f0; }
+.beam {       /* moonlight falling on the floor */
+  left: 44%; top: 38%; width: 40%; height: 58%;
+  background: linear-gradient(rgba(220, 230, 255, 0.2), transparent);
+  clip-path: polygon(8% 0, 38% 0, 100% 100%, 20% 100%);
+}
+.rod { left: calc(50% - 95px); width: 190px; top: 5%; height: 4px; background: #ffd24d; border-radius: 2px; box-shadow: 0 0 6px #ffd24d; }
+.curtain {
+  top: 5%; width: 34px; height: 44%;
+  background: repeating-linear-gradient(90deg, #5a0b6b 0 5px, #3a0648 5px 10px);
+}
+.c1 { left: calc(50% - 84px); } .c2 { left: calc(50% + 50px); }
+.wardrobe {
+  left: 3%; bottom: 25%; width: 15%; height: 52%;
+  background: linear-gradient(90deg, #2d1b45, #3a2458); border: 3px solid #5a3f7a; border-radius: 4px 4px 0 0;
+}
+.wardrobe::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #140a22; }
+.wardrobe::after  {
+  content: ""; position: absolute; left: calc(50% - 14px); top: 50%; width: 6px; height: 6px; border-radius: 50%;
+  background: #ffd24d; box-shadow: 20px 0 #ffd24d;
+}
+.bdoor {
+  right: 2%; bottom: 25%; width: 10%; height: 52%;
+  background: linear-gradient(90deg, #2a1630, #3a1f45); border: 3px solid #5a3f6a; border-radius: 4px 4px 0 0;
+}
+.bdoor::after { content: ""; position: absolute; left: 12%; top: 50%; width: 7px; height: 7px; border-radius: 50%; background: #ffd24d; box-shadow: 0 0 6px #ffd24d; }
+.brug {
+  left: 50%; bottom: 6%; width: 56%; height: 14%; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(ellipse, #4b1d6e 0 55%, #2a0f45 56% 100%);
+  border: 3px double rgba(255, 0, 230, 0.65); box-shadow: 0 0 14px rgba(255, 0, 230, 0.4);
+}
+.stand {
+  bottom: 25%; width: 8%; height: 15%; border: 2px solid #5a3f2a; border-radius: 3px;
+  background: linear-gradient(#3b2a1c, #24170e);
+}
+.stand::after { content: ""; position: absolute; left: 15%; right: 15%; top: 25%; height: 30%; border: 1px solid #7a5a3e; }
+.st1 { left: 20%; } .st2 { left: 72%; }
+.bed {
+  left: 50%; bottom: 25%; width: 40%; height: 17%; transform: translateX(-50%);
+  border: 2px solid #8a5cff; border-radius: 6px;
+  background: linear-gradient(#6a3aa8 0 22%, #3b1f6e 22% 100%); box-shadow: 0 0 16px rgba(138, 92, 255, 0.7);
+}
+.bed::before {   /* headboard */
+  content: ""; position: absolute; left: -3%; right: -3%; bottom: 100%; height: 95%;
+  background: linear-gradient(#24143f, #150c2e); border: 2px solid #8a5cff; border-bottom: 0; border-radius: 14px 14px 0 0;
+}
+.bed::after { content: ""; position: absolute; left: 0; right: 0; top: 55%; height: 10%; background: rgba(255, 255, 255, 0.08); }  /* blanket fold */
+.pillow {
+  bottom: 39.5%; width: 10%; height: 7%; border-radius: 12px;
+  background: linear-gradient(#efe9ff, #b9aee6); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.pl1 { left: 34%; } .pl2 { left: 56%; }
+.doll { left: 50%; bottom: 40%; transform: translateX(-50%); font-size: 2.2rem; filter: drop-shadow(0 0 6px #000); }
+.lampshade { left: 21.5%; bottom: 40%; width: 5%; height: 8%; background: #ffcf8a; clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); }
+.lampglow {
+  left: 12%; bottom: 30%; width: 26%; height: 45%;
+  background: radial-gradient(ellipse, rgba(255, 176, 97, 0.4), transparent 65%); animation: flicker 6s infinite;
+}
+.mirror {
+  left: 72%; bottom: 44%; width: 8%; height: 30%; border: 3px solid var(--cyan); border-radius: 50%;
+  background: linear-gradient(135deg, rgba(191, 239, 255, 0.35), rgba(108, 0, 255, 0.2)); box-shadow: 0 0 16px var(--cyan);
+}
+
+/* ----- BASEMENT ----- */
+.bricks {
+  left: 0; right: 0; top: 0; bottom: 26%; opacity: 0.55;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 30px, rgba(0, 0, 0, 0.7) 30px 32px),
+    repeating-linear-gradient(90deg, transparent 0 64px, rgba(0, 0, 0, 0.5) 64px 66px);
+}
+.pipe { left: 0; right: 0; top: 30%; height: 12px; background: linear-gradient(#5b7a85, #1c2c33); box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
+.lantern {
+  left: 16%; top: 42%; width: 26px; height: 36px; border: 2px solid #7ee; border-radius: 6px;
+  background: rgba(0, 255, 255, 0.35); box-shadow: 0 0 30px 10px rgba(0, 255, 255, 0.45); animation: flicker 3s infinite;
+}
+.lantern::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 2px; height: 40px; background: #7ee; }
+.barrel {
+  left: 68%; bottom: 24%; width: 11%; height: 26%; border-radius: 12px / 20px; border: 2px solid #5a3a1a;
+  background: repeating-linear-gradient(0deg, #3a2a1a 0 8px, #241a10 8px 11px); box-shadow: 0 0 12px rgba(255, 107, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) { .mist, .chandelier::after, .lampglow, .lantern { animation: none; } }

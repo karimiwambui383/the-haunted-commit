@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Haunted House: Escape Before Midnight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="scene" id="intro">
+    <div class="moon"></div>
+
+    <!-- The stage holds everything. Every size inside is in "em",
+         so the whole house scales down on small screens. -->
+    <div class="stage">
+      <div class="ground"></div>
+      <div class="path"></div>
+
+      <div class="house">
+        <div class="roof roof-top"></div>
+        <div class="upper"></div>
+        <div class="lower"></div>
+        <div class="roof roof-porch"></div>
+
+        <div class="window w-up-left"></div>
+        <div class="window w-up-right"></div>
+        <div class="window w-low-left"></div>
+        <div class="window w-low-right"></div>
+
+        <div class="door" id="door"></div>
+        <div class="lamp lamp-left"></div>
+        <div class="lamp lamp-right"></div>
+        <div class="railing"></div>
+        <div class="steps"></div>
+      </div>
+
+      <div class="ghost ghost-left"></div>
+      <div class="ghost ghost-right"></div>
+
+      <div class="pumpkin p1"></div>
+      <div class="pumpkin p2"></div>
+      <div class="pumpkin p3"></div>
+      <div class="pumpkin p4"></div>
+      <div class="pumpkin p5"></div>
+    </div>
+
+    <div class="fog"></div>
+
+    <section class="panel">
+      <h1>Escape Before Midnight</h1>
+      <p id="message">You have until the clock strikes twelve.</p>
+      <button id="start-btn" type="button">Start game</button>
+    </section>
+  </main>
+
+
+  <!-- ============ THE GAME (Day 2+) ============ -->
+  <main class="game hidden" id="game">
+    <header class="hud">
+      <div class="stat"><span class="lbl">HEALTH</span><span id="hearts"></span></div>
+      <div class="stat">
+        <span class="lbl">KEYS <span id="keycount">0/4</span></span>
+        <span id="keys" class="slots">
+          <i class="slot" data-key="silver" title="Silver Key">🗝️</i>
+          <i class="slot" data-key="gold" title="Gold Key">🔑</i>
+          <i class="slot" data-key="rusty" title="Rusty Key">🗝️</i>
+          <i class="slot" data-key="master" title="Master Key">👑</i>
+        </span>
+      </div>
+      <div class="stat"><span class="lbl">TIME</span><span id="clock">11:45 PM</span></div>
+    </header>
+
+    <p id="goal" class="goal"></p>
+
+    <section class="room" id="room">
+      <h2 id="room-name"></h2>
+      <div class="decor" id="decor"></div>
+      <div id="hotspots"></div>
+    </section>
+
+    <p id="log"></p>
+
+    <nav class="controls">
+      <button id="btn-inventory" class="btn-violet" type="button">INVENTORY</button>
+      <button id="btn-hint" class="btn-cyan" type="button">HINT</button>
+      <button id="btn-pause" class="btn-pink" type="button">PAUSE</button>
+      <button id="btn-help" class="btn-ghost" type="button">HOW TO PLAY</button>
+      <button id="btn-sound" class="btn-ghost" type="button">SOUND ON</button>
+    </nav>
+  </main>
+
+  <div id="modal" class="modal hidden"><div class="modal-box" id="modal-box"></div></div>
+
+  <div id="scare" class="scare hidden">
+    <div id="scare-face"></div>
+    <button id="banish" type="button">BANISH IT!</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
